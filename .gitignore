@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.streamlit/secrets.toml
+.app_data/
+*.py[cod]
+.DS_Store
