@@ -1,0 +1,40 @@
+methodology:
+  category_weights:
+    fundamentals: 0.30
+    valuation: 0.25
+    momentum: 0.30
+    risk: 0.15
+  factors:
+    fundamentals:
+      roe: {weight: 0.35, direction: higher}
+      operating_margin: {weight: 0.25, direction: higher}
+      revenue_growth: {weight: 0.25, direction: higher}
+      debt_to_equity: {weight: 0.15, direction: lower}
+    valuation:
+      pe: {weight: 0.35, direction: lower, positive_only: true}
+      pb: {weight: 0.20, direction: lower, positive_only: true}
+      ev_ebitda: {weight: 0.30, direction: lower, positive_only: true}
+      dividend_yield: {weight: 0.15, direction: higher}
+    momentum:
+      return_6m: {weight: 0.50, direction: higher}
+      return_12_1m: {weight: 0.50, direction: higher}
+    risk:
+      volatility_3m: {weight: 0.40, direction: lower}
+      downside_volatility_3m: {weight: 0.25, direction: lower}
+      max_drawdown_1y: {weight: 0.35, direction: higher}
+  scoring:
+    missing_value_score: 50.0
+    shrink_for_missing_data: true
+    minimum_coverage: 0.45
+    winsor_lower: 0.02
+    winsor_upper: 0.98
+backtest:
+  rebalance_frequency: M
+  top_n: 10
+  transaction_cost_bps: 10.0
+  minimum_history_days: 260
+  fundamental_lag_days: 1
+paper_trading:
+  starting_cash: 100000.0
+  fee_bps: 10.0
+  allow_fractional_shares: false
