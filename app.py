@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hmac
 from copy import deepcopy
 from datetime import date, timedelta
 from pathlib import Path
@@ -42,6 +43,34 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
 )
+
+
+def require_access_password() -> None:
+    """Require a shared password when APP_PASSWORD is configured in cloud secrets."""
+    try:
+        configured_password = str(st.secrets.get("APP_PASSWORD", "")).strip()
+    except Exception:
+        # Streamlit raises when no secrets file exists during local development.
+        configured_password = ""
+
+    if not configured_password or st.session_state.get("access_granted"):
+        return
+
+    st.title("UK Equity Lab")
+    st.caption("Private access · research and paper trading only")
+    with st.form("access_password_form"):
+        supplied_password = st.text_input("Access password", type="password")
+        unlock = st.form_submit_button("Unlock", type="primary")
+
+    if unlock:
+        if hmac.compare_digest(supplied_password, configured_password):
+            st.session_state.access_granted = True
+            st.rerun()
+        st.error("That access password is not correct.")
+    st.stop()
+
+
+require_access_password()
 
 st.markdown(
     """
